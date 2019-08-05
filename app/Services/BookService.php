@@ -3,40 +3,41 @@
 namespace App\Services;
 
 use App\Models\Book;
-use App\Services\Interfaces\IBookService;
+use App\Exceptions\BookException;
+use App\Repositories\BookRepository;
 
 class BookService //implements IBookService
 {
-    public function getAll(){
-        $books = Book::all();
+    public function getAllBooks(){
+        $books = BookRepository::getAllBooks();
         return $books;
     }
 
-    public function getOneById($id){
-        $book = Book::find($id);
+    public function getBookById($id){
+        $book = BookRepository::getBookById($id);
 
-        if(!$book){
-            return "not found"; // throw not found exception
+        if(is_null($book)){
+            throw new BookException("Book Not Found", 404);
         }
 
         return $book;
     }
 
-    public function storeOne($data){
-        return Book::create($data);
+    public function storeBook($data){
+        return BookRepository::storeBook($data);
     }
 
-    public function update($data, $id){
-        $book = Book::find($id);
-
-        if(!$book){
-            return "no such book exists"; // throw not found exception
+    public function updateBook($id, $isbn, $title, $description, $author, $quantity){
+        $updatedCount = BookRepository::updateBook($id, $isbn, $title, $description, $author, $quantity);
+        if($updatedCount === 0){
+            throw new BookException("Book Not Found", 404);
         }
-
-        $book->update($data);
-        return $book;
     }
 
-    public function delete($data){
+    public function destroyBook($id){
+        if(BookRepository::destroyBook($id) === 0){
+            throw new BookException("Book Not Found", 404);
+        }
+        return true;
     }
 }

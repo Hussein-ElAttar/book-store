@@ -25,11 +25,11 @@ class UpdateBookRequest extends FormRequest
     {
         $bookId = $this->route('book');
         return [
-            'isbn' => 'required|max:255|unique:books,isbn,'. $bookId,
-            'title' => 'required|max:255',
-            'author' => 'required|max:100',
-            'quantity' => 'required|integer|min:0',
-            'description' => 'required|max:255',
+            'isbn' => 'max:255|unique:books,isbn,'. $bookId,
+            'title' => 'max:255',
+            'author' => 'max:100',
+            'quantity' => 'integer|min:0',
+            'description' => 'max:255',
         ];
     }
 }

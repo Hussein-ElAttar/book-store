@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use App\Services\BookService;
+use Illuminate\Support\Facades\Response;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
 
@@ -22,7 +23,7 @@ class BookController extends Controller
      */
     public function index(BookService $bookService)
     {
-        $books = $this->bookService->getAll();
+        $books = $this->bookService->getAllBooks();
 
         return response()->json($books);
     }
@@ -35,7 +36,7 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        $book = $this->bookService->getOneById($id);
+        $book = $this->bookService->getBookById($id);
 
         return response()->json($book);
     }
@@ -48,7 +49,7 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        $createdBook = $this->bookService->storeOne($request->all());
+        $createdBook = $this->bookService->storeBook($request->all());
 
         return response()->json($createdBook);
     }
@@ -62,8 +63,16 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, $id)
     {
-        $updatedBook = $this->bookService->update($request->all(), $id);
+        $data = $request->all();
+        $description = $data['description'] ?? NULL;
+        $quantity    = $data['quantity'] ?? NULL;
+        $author      = $data['author'] ?? NULL;
+        $title       = $data['title'] ?? NULL;
+        $isbn        = $data['isbn'] ?? NULL;
 
+        $updatedBook = $this->bookService->updateBook(
+            $id, $isbn, $title, $description, $author, $quantity
+        );
         return $updatedBook;
     }
 
@@ -73,8 +82,10 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Book $book)
+    public function destroy($id)
     {
-        //
+        $this->bookService->destroyBook($id);
+
+        return Response::json(['message'=>'success'], 200);
     }
 }
