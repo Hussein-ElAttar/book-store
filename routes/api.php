@@ -17,12 +17,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('books', 'BookController',
-    [
-        'parameters' => [
-            'show' => 'id',
-            'update' => 'id',
-            'destroy' => 'id'
-        ]
-    ]
-);
+
+Route::group(['middleware' => ['jwt.auth']], function () {
+        Route::apiResource('books', 'BookController',
+        [
+            'parameters' => [
+                'show' => 'id',
+                'update' => 'id',
+                'destroy' => 'id'
+            ]
+        ]);
+});
+Route::post('login', 'AuthController@login');
+Route::get('refresh', 'AuthController@refresh')->middleware('jwt.refresh');

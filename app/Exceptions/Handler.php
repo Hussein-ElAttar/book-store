@@ -3,8 +3,13 @@
 namespace App\Exceptions;
 
 use Exception;
+use App\Exceptions\Interfaces\JWTException;
 use App\Exceptions\Interfaces\ICustomException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -47,6 +52,19 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // Tymon JWT Exceptions
+        if ($exception instanceof TokenExpiredException)
+        {
+            return response()->json(['message' => 'Token expired']);
+        }
+        else if ($exception instanceof TokenInvalidException)
+        {
+            return response()->json(['message' => 'Invalid token']);
+        }
+        else if ($exception instanceof TokenBlacklistedException) {
+            return response()->json(['message' => 'Token Blacklisted']);
+        }
+
         if ($exception instanceof ICustomException) {
             return response()->json(['message' => $exception->getErrorMessage()], $exception->getErrorHttpCode());
         }
