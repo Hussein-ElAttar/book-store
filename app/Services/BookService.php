@@ -38,6 +38,5 @@ class BookService //implements IBookService
         if(BookRepository::destroyBook($id) === 0){
             throw new BookException("Book Not Found", 404);
         }
-        return true;
     }
 }

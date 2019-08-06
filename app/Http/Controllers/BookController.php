@@ -70,10 +70,12 @@ class BookController extends Controller
         $title       = $data['title'] ?? NULL;
         $isbn        = $data['isbn'] ?? NULL;
 
-        $updatedBook = $this->bookService->updateBook(
+        $this->bookService->updateBook(
             $id, $isbn, $title, $description, $author, $quantity
         );
-        return $updatedBook;
+
+        return Response::json(['message'=>'Book Updated Successfully'], 200);
+
     }
 
     /**
@@ -86,6 +88,6 @@ class BookController extends Controller
     {
         $this->bookService->destroyBook($id);
 
-        return Response::json(['message'=>'success'], 200);
+        return Response::json(['message'=>'Book Deleted Successfully'], 200);
     }
 }
