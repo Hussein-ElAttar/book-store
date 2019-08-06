@@ -23,7 +23,7 @@ class UpdateBookRequest extends FormRequest
      */
     public function rules()
     {
-        $bookId = $this->route('book');
+        $bookId = $this->route('id');
         return [
             'isbn' => 'max:255|unique:books,isbn,'. $bookId,
             'title' => 'max:255',

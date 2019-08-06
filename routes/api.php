@@ -18,15 +18,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::group(['middleware' => ['jwt.auth']], function () {
-        Route::apiResource('books', 'BookController',
-        [
-            'parameters' => [
-                'show' => 'id',
-                'update' => 'id',
-                'destroy' => 'id'
-            ]
-        ]);
+Route::group(['middleware' => ['jwt.refresh']], function () {
+    Route::get('refresh', 'AuthController@refresh');
 });
+
+Route::group(['middleware' => ['jwt.auth']], function () {
+    Route::get('books', 'BookController@index');
+    Route::post('books', 'BookController@store');
+    Route::get('books/{id}', 'BookController@show');
+    Route::put('books/{id}', 'BookController@update');
+    Route::delete('books/{id}', 'BookController@destroy');
+});
+
 Route::post('login', 'AuthController@login');
-Route::get('refresh', 'AuthController@refresh')->middleware('jwt.refresh');
