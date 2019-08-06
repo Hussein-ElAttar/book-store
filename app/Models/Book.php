@@ -23,4 +23,9 @@ class Book extends Model
     protected $fillable = ['title', 'description', 'isbn', 'author', 'quantity'];
     protected $guarded = ['id'];
 
+    public function user()
+    {
+        return $this->belongsTo(App\Models\User::class);
+    }
+
 }

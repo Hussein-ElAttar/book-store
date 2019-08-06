@@ -8,9 +8,9 @@ Interface IBookRepository
 
     public static function getBookById($id);
 
-    public static function storeBook($data);
+    public static function storeBook($isbn, $title, $description, $author, $quantity, $user_id);
 
-    public static function updateBook($id, $isbn, $title, $description, $author, $quantity);
+    public static function updateBook($id, $isbn, $title, $description, $author, $quantity, $user_id);
 
     public static function destroyBook($id);
 }

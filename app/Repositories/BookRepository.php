@@ -12,16 +12,21 @@ class BookRepository implements IBookRepository
         return Book::all();
     }
 
+    public static function getBooksByUserId($userId){
+        return Book::all()->where('user_id', $userId);
+    }
+
     public static function getBookById($id){
         return Book::find($id);
     }
 
-    public static function storeBook($data){
-        return Book::create($data);
+    public static function storeBook($isbn, $title, $description, $author, $quantity, $user_id){
+        $fields = compact('isbn', 'title', 'description', 'author', 'quantity', 'user_id');
+        return Book::create($fields);
     }
 
-    public static function updateBook($id, $isbn, $title, $description, $author, $quantity){
-        $fields = array_filter(compact('isbn', 'title', 'description', 'author', 'quantity'));
+    public static function updateBook($id, $isbn, $title, $description, $author, $quantity, $user_id){
+        $fields = array_filter(compact('isbn', 'title', 'description', 'author', 'quantity', 'user_id'));
         return Book::where(['id'=> $id ])->update($fields);
     }
 

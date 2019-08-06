@@ -21,9 +21,9 @@ class BookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(BookService $bookService)
+    public function index()
     {
-        $books = $this->bookService->getAllBooks();
+        $books = $this->bookService->getUserBooks();
 
         return response()->json($books);
     }
@@ -49,7 +49,16 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        $createdBook = $this->bookService->storeBook($request->all());
+        $data = $request->all();
+        $description = $data['description'];
+        $quantity    = $data['quantity'];
+        $author      = $data['author'];
+        $title       = $data['title'];
+        $isbn        = $data['isbn'];
+
+        $createdBook = $this->bookService->storeBook(
+            $isbn, $title, $description, $author, $quantity
+        );
 
         return response()->json($createdBook);
     }
