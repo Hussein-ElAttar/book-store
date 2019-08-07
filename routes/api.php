@@ -31,3 +31,5 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 });
 
 Route::post('login', 'AuthController@login');
+Route::post('password/email','Api\Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::post('password/reset','Api\Auth\ResetPasswordController@reset')->name('password.reset');
