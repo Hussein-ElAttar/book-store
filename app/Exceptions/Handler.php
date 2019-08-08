@@ -55,14 +55,14 @@ class Handler extends ExceptionHandler
         // Tymon JWT Exceptions
         if ($exception instanceof TokenExpiredException)
         {
-            return response()->json(['message' => 'Token expired']);
+            return response()->json(['message' => 'Token expired'], 401);
         }
         else if ($exception instanceof TokenInvalidException)
         {
-            return response()->json(['message' => 'Invalid token']);
+            return response()->json(['message' => 'Invalid token'], 401);
         }
         else if ($exception instanceof TokenBlacklistedException) {
-            return response()->json(['message' => 'Token Blacklisted']);
+            return response()->json(['message' => 'Token Blacklisted'], 401);
         }
 
         if ($exception instanceof ICustomException) {
