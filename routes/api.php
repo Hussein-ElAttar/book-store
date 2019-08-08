@@ -29,7 +29,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('users/actions/send-email-activation-link', 'Api\UserController@sendActivationLinkEmail');
 });
 
-Route::group(['middleware' => ['jwt.auth', 'ValidateEmailVerificationURL']], function () {
+Route::group(['middleware' => ['jwt.auth', 'email.verification.url.validate']], function () {
     Route::get('users/actions/verify-email', 'Api\UserController@verifyEmail')->name('verifyUserEmail');
 });
 
