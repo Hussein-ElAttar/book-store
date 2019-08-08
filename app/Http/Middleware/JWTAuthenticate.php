@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\JWTBaseMiddleware;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
@@ -42,5 +43,6 @@ class JWTAuthenticate extends JWTBaseMiddleware
         if (is_null(auth('api')->user())){
             throw new JWTException('User not found', 400);
         }
+        Auth::setUser(auth('api')->user());
     }
 }

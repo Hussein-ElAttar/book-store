@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Services\JWTService;
 use App\Repositories\UserRepository;
 use App\Exceptions\CustomException;
 use App\Jobs\SendEmailJob;
