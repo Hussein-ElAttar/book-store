@@ -17,11 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-Route::group(['middleware' => ['jwt.refresh']], function () {
-    Route::get('refresh', 'Api\AuthController@refresh');
-});
-
 Route::group(['middleware' => ['jwt.auth', 'verified']], function () {
     Route::get('books', 'Api\BookController@index');
     Route::post('books', 'Api\BookController@store');
@@ -30,13 +25,17 @@ Route::group(['middleware' => ['jwt.auth', 'verified']], function () {
     Route::delete('books/{id}', 'Api\BookController@destroy');
 });
 
-Route::post('login', 'Api\AuthController@login');
-
-Route::post('users/actions/send-reset-password-mail','Api\Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::post('users/actions/reset-password','Api\Auth\ResetPasswordController@reset');
-
-
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get('email/verify', 'Api\Auth\VerificationController@verify')->name('verification.verify');
     Route::get('email/resend', 'Api\Auth\VerificationController@resend')->name('verification.resend');
 });
+
+Route::group(['middleware' => ['jwt.refresh']], function () {
+    Route::get('users/actions/refresh-jwt', 'Api\UserController@refreshJWT');
+});
+
+Route::post('users/actions/login', 'Api\UserController@login');
+
+Route::post('users/actions/send-reset-password-mail','Api\Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('users/actions/reset-password','Api\Auth\ResetPasswordController@reset');
+Route::post('users/actions/register','Api\UserController@register');
