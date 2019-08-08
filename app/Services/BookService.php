@@ -3,11 +3,15 @@
 namespace App\Services;
 
 use App\Exceptions\BookException;
+use App\Exceptions\CustomException;
 use App\Repositories\BookRepository;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\Permissible;
 
 class BookService //implements IBookService
 {
+    use Permissible;
+
     public function getAllBooks(){
         $books = BookRepository::getAllBooks();
         return $books;
@@ -24,7 +28,8 @@ class BookService //implements IBookService
         if(is_null($book)){
             throw new BookException("Book Not Found", 404);
         }
-        else if ($book->user_id !== Auth::user()->id){
+        // Business logic, should this be placed somewhere else ?
+        else if ($book->user_id !== Auth::user()->id ){
             throw new BookException("Forbidden", 403);
         }
 

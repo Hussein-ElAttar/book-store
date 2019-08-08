@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\CustomResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Notifications\VerifyEmail;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
+
+    protected $guard_name = 'api';
     /**
      * The attributes that are mass assignable.
      *
