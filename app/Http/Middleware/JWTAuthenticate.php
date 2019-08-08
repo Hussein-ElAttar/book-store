@@ -39,7 +39,7 @@ class JWTAuthenticate extends JWTBaseMiddleware
         if($token->getClaim('type') === 'refresh_token'){
             throw new JWTException('invalid token', 401);
         }
-        if (! $token->authenticate()) {
+        if (is_null(auth('api')->user())){
             throw new JWTException('User not found', 400);
         }
     }
