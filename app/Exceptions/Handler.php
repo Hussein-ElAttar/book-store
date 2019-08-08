@@ -64,9 +64,10 @@ class Handler extends ExceptionHandler
         else if ($exception instanceof TokenBlacklistedException) {
             return response()->json(['message' => 'Token Blacklisted'], 401);
         }
-
         if ($exception instanceof ICustomException) {
-            return response()->json(['message' => $exception->getErrorMessage()], $exception->getErrorHttpCode());
+            return response()->json(
+                ['message' => $exception->getErrorMessage()], $exception->getErrorHttpCode()
+            );
         }
         return parent::render($request, $exception);
     }

@@ -26,16 +26,18 @@ Route::group(['middleware' => ['jwt.auth', 'verified']], function () {
 });
 
 Route::group(['middleware' => ['jwt.auth']], function () {
-    Route::get('email/verify', 'Api\Auth\VerificationController@verify')->name('verification.verify');
-    Route::get('email/resend', 'Api\Auth\VerificationController@resend')->name('verification.resend');
+    Route::get('users/actions/send-email-activation-link', 'Api\UserController@sendActivationLinkEmail');
+});
+
+Route::group(['middleware' => ['jwt.auth', 'ValidateEmailVerificationURL']], function () {
+    Route::get('users/actions/verify-email', 'Api\UserController@verifyEmail')->name('verifyUserEmail');
 });
 
 Route::group(['middleware' => ['jwt.refresh']], function () {
-    Route::get('users/actions/refresh-jwt', 'Api\UserController@refreshJWT');
+    Route::get('users/actions/refresh-jwt', 'Api\UserController@GetNewAccessToken');
 });
 
 Route::post('users/actions/login', 'Api\UserController@login');
-
-Route::post('users/actions/send-reset-password-mail','Api\Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::post('users/actions/reset-password','Api\Auth\ResetPasswordController@reset');
+Route::post('users/actions/send-reset-password-mail','Api\UserController@SendResetPasswordEmail');
+Route::post('users/actions/reset-password','Api\UserController@resetPassword');
 Route::post('users/actions/register','Api\UserController@register');
