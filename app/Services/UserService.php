@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Jobs\SendEmailJob;
 use App\Events\UserVerified;
 use Illuminate\Support\Carbon;
-use App\Services\TymonJWTService;
 use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\URL;
 use App\Repositories\UserRepository;
@@ -28,8 +27,9 @@ class UserService
     public function register($name, $email, $password)
     {
         $user = UserRepository::storeUser($name, $email, $password);
+        $user->assignRole('editor');
 
-        $this->sendActivationLinkEmail($user->id, $user->email);
+        $this->sendActivationLinkEmail($user, $user->email);
 
         return $user;
     }
