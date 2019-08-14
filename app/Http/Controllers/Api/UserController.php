@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\User\RegisterUserRequest;
 use App\Http\Requests\User\ResetUserPasswordRequest;
 use App\Http\Requests\User\SendResetPasswordEmailRequest;
@@ -13,7 +13,8 @@ class UserController extends Controller
 {
     private $userService;
 
-    public function __construct(UserService $userService) {
+    public function __construct(UserService $userService)
+    {
         $this->userService = $userService;
     }
 
@@ -40,14 +41,14 @@ class UserController extends Controller
 
     public function GetNewAccessToken()
     {
-        $access_token = $this->userService->getNewAccessToken();
+        $access_token = $this->userService->getNewAccessToken(Auth::user());
 
         return $this->respondWithTokens($access_token, NULL);
     }
 
     public function sendActivationLinkEmail()
     {
-        $this->userService->sendActivationLinkEmail();
+        $this->userService->sendActivationLinkEmail(Auth::user());
 
         return response()->json('Your Activation link has been submitted');
     }
@@ -75,13 +76,15 @@ class UserController extends Controller
 
     public function verifyEmail(Request $request)
     {
-        $this->userService->verifyEmail();
+        $this->userService->verifyEmail(Auth::user());
+
         return response()->json('Email verified!');
     }
 
     protected function respondWithTokens($accessToken, $refreshToken)
     {
         $response = array_filter(compact('accessToken', 'refreshToken'));
+
         return response()->json($response);
     }
 }

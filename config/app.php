@@ -176,6 +176,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\JWTLaravelServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
+        App\Providers\JWTServiceProvider::class,
     ],
 
     /*

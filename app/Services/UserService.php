@@ -2,19 +2,21 @@
 
 namespace App\Services;
 
-use App\Services\JWTService;
-use App\Repositories\UserRepository;
-use App\Exceptions\CustomException;
 use App\Jobs\SendEmailJob;
+use App\Events\UserVerified;
 use Illuminate\Support\Carbon;
+use App\Services\TymonJWTService;
+use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Hash;
+use App\Repositories\UserRepository;
+use App\Services\Interfaces\IJWTService;
 use Illuminate\Support\Facades\Password;
 
-class UserService{
+class UserService
+{
     private $jwtService;
 
-    public function __construct(JWTService $jwtService) {
+    public function __construct(IJWTService $jwtService) {
         $this->jwtService = $jwtService;
     }
 
@@ -27,37 +29,37 @@ class UserService{
     {
         $user = UserRepository::storeUser($name, $email, $password);
 
+        $this->sendActivationLinkEmail($user->id, $user->email);
+
         return $user;
     }
 
-    public function getNewAccessToken()
+    public function getNewAccessToken($user)
     {
-        return $this->jwtService->refreshJWT();
+        return $this->jwtService->refreshJWT($user);
     }
 
-    public function sendActivationLinkEmail()
+    public function sendActivationLinkEmail($user)
     {
-        if (auth('api')->user()->hasVerifiedEmail()) {
-            throw new CustomException('User already have verified email!', 422);
+        if ($user->hasVerifiedEmail()) {
+            throw new CustomException('User already has verified email!', 422);
         }
 
-        $user_email = auth('api')->user()->email;
-        $user_id    = auth('api')->user()->id;
-
         $temporarySignedURL = URL::temporarySignedRoute(
-            'verifyUserEmail', Carbon::now()->addMinutes(60), ['id' => $user_id]
+            'verifyUserEmail', Carbon::now()->addMinutes(60), ['id' => $user->id]
         );
-        dispatch(new SendEmailJob($user_email, $temporarySignedURL));
+
+        dispatch(new SendEmailJob($user->email, $temporarySignedURL));
     }
 
-    public function verifyEmail()
+    public function verifyEmail($user)
     {
-        if (auth('api')->user()->hasVerifiedEmail()) {
+        if ($user->hasVerifiedEmail()) {
             throw new CustomException('Email Already Verified', 422);
         }
 
-        auth('api')->user()->markEmailAsVerified();
-        event(new UserVerified(auth('api')->user()->email));
+        $user->markEmailAsVerified();
+        event(new UserVerified($user->email));
     }
 
     public function resetPassword($email, $password, $password_confirmation, $token)
@@ -68,7 +70,7 @@ class UserService{
             UserRepository::updateUserPasswordByModel($user, $password);
         });
 
-        if($response != Password::PASSWORD_RESET){
+        if($response != Password::PASSWORD_RESET) {
             throw new CustomException(trans($response), 400);
         }
     }
@@ -78,7 +80,7 @@ class UserService{
         $data = compact('email');
         $response = Password::broker()->sendResetLink($data);
 
-        if($response != Password::RESET_LINK_SENT){
+        if($response != Password::RESET_LINK_SENT) {
             throw new CustomException(trans($response), 400);
         }
     }

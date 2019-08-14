@@ -2,20 +2,19 @@
 
 namespace App\Services\Interfaces;
 
-class BookService implements IBookService
+interface IBookService
 {
-    public function getAllBooks(){
-    }
+    public function getAllBooks();
 
-    public function getBookById($id){
-    }
+    public function getUserBooks($user_id);
 
-    public function storeBook($data){
-    }
+    public function getBookById($book_id);
 
-    public function updateBook($id, $isbn, $title, $description, $author, $quantity){
-    }
+    public function storeBook($isbn, $title, $description, $author, $quantity, $user_id);
 
-    public function destroyBook($id){
-    }
+    public function updateBook($book_id, $isbn, $title, $description, $author, $quantity, $user_id);
+
+    public function destroyBook($book_id);
+
+    public function ensureUserOwnsTheBook($book_id, $user_id);
 }

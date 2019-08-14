@@ -3,16 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Services\BookService;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
-use App\Http\Controllers\Controller;
 
 class BookController extends Controller
 {
     private $bookService;
 
-    public function __construct(BookService $bookService) {
+    public function __construct(BookService $bookService)
+    {
         $this->bookService = $bookService;
     }
     /**
@@ -22,7 +24,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = $this->bookService->getUserBooks();
+        $books = $this->bookService->getUserBooks(Auth::user()->id);
 
         return response()->json($books);
     }
@@ -36,6 +38,8 @@ class BookController extends Controller
     public function show($id)
     {
         $book = $this->bookService->getBookById($id);
+
+        $this->ensureUserOwnsTheBook($id, Auth::user()->id);
 
         return response()->json($book);
     }
@@ -56,7 +60,7 @@ class BookController extends Controller
         $isbn        = $data['isbn'];
 
         $createdBook = $this->bookService->storeBook(
-            $isbn, $title, $description, $author, $quantity
+            $isbn, $title, $description, $author, $quantity, Auth::user()->id
         );
 
         return response()->json($createdBook);
@@ -78,8 +82,10 @@ class BookController extends Controller
         $title       = $data['title'] ?? NULL;
         $isbn        = $data['isbn'] ?? NULL;
 
+        $this->ensureUserOwnsTheBook($id, Auth::user()->id);
+
         $this->bookService->updateBook(
-            $id, $isbn, $title, $description, $author, $quantity
+            $id, $isbn, $title, $description, $author, $quantity, Auth::user()->id
         );
 
         return Response::json(['message'=>'Book Updated Successfully'], 200);
@@ -94,6 +100,8 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
+        $this->ensureUserOwnsTheBook($id, Auth::user()->id);
+
         $this->bookService->destroyBook($id);
 
         return Response::json(['message'=>'Book Deleted Successfully'], 200);
