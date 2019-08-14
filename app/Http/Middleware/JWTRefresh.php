@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use App\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\JWTBaseMiddleware;
 
 class JWTRefresh extends JWTBaseMiddleware
@@ -19,6 +20,7 @@ class JWTRefresh extends JWTBaseMiddleware
         if($payload->get('type') !== 'refresh_token'){
             throw new JWTException('Invalid token', 400);
         }
+        Auth::setUser(auth('api')->user());
 
         return $next($request);
     }
