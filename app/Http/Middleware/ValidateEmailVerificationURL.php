@@ -10,9 +10,8 @@ class ValidateEmailVerificationURL
 {
     public function handle($request, Closure $next)
     {
-        if (!$request->hasValidSignature()
-            || $request->get('id') != auth('api')->user()->id
-        ){
+        if (!$request->hasValidSignature())
+        {
             throw new CustomException('Invalid url', 400);
         }
 

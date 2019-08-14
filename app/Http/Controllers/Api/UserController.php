@@ -76,7 +76,9 @@ class UserController extends Controller
 
     public function verifyEmail(Request $request)
     {
-        $this->userService->verifyEmail(Auth::user());
+        $user_id = $request->get('id');
+
+        $this->userService->verifyEmail($user_id);
 
         return response()->json('Email verified!');
     }

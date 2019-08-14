@@ -20,4 +20,7 @@ class UserRepository implements IUserRepository
         $user->setRememberToken(Str::random(60));
         $user->save();
     }
+    public static function getUserById($user_id){
+        return User::find($user_id);
+    }
 }

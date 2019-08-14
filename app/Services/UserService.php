@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Services;
-
+use App\Constants;
 use App\Jobs\SendEmailJob;
 use App\Events\UserVerified;
 use Illuminate\Support\Carbon;
@@ -46,14 +46,18 @@ class UserService
         }
 
         $temporarySignedURL = URL::temporarySignedRoute(
-            'verifyUserEmail', Carbon::now()->addMinutes(60), ['id' => $user->id]
+            'verifyUserEmail',
+            Carbon::now()->addMinutes(Constants::EMAIL_VALIDATION_URL_TTL_MINUTES),
+            ['id' => $user->id]
         );
 
         dispatch(new SendEmailJob($user->email, $temporarySignedURL));
     }
 
-    public function verifyEmail($user)
+    public function verifyEmail($user_id)
     {
+        $user = UserRepository::getUserById($user_id);
+
         if ($user->hasVerifiedEmail()) {
             throw new CustomException('Email Already Verified', 422);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Constants;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -28,6 +29,9 @@ class VerificationEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.verificationEmail', ["activation_link"=>$this->activation_link]);
+        return $this->view('emails.verificationEmail', [
+            "activation_link"=>$this->activation_link,
+            "email_ttl_minutes"=>Constants::EMAIL_VALIDATION_URL_TTL_MINUTES
+        ]);
     }
 }

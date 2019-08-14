@@ -31,7 +31,7 @@ Route::prefix('users/actions/')->group( function () {
 
     Route::get('verify-email', 'Api\UserController@verifyEmail')
         ->name('verifyUserEmail')
-        ->middleware('jwt.auth', 'email.verification.url.validate');
+        ->middleware('email.verification.url.validate');
 
     Route::get('refresh-jwt', 'Api\UserController@GetNewAccessToken')
         ->middleware('jwt.refresh');
