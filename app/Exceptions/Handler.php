@@ -10,6 +10,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Spatie\Permission\Exceptions\UnauthorizedException as SpatieUnauthorizedException;
 
 class Handler extends ExceptionHandler
 {
@@ -52,6 +53,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // Spatie Exceptions
+        if ($exception instanceof SpatieUnauthorizedException)
+        {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         // Tymon JWT Exceptions
         if ($exception instanceof TokenExpiredException)
         {
@@ -64,11 +71,14 @@ class Handler extends ExceptionHandler
         else if ($exception instanceof TokenBlacklistedException) {
             return response()->json(['message' => 'Token Blacklisted'], 401);
         }
+
+        // Custom App Exceptions
         if ($exception instanceof ICustomException) {
             return response()->json(
                 ['message' => $exception->getErrorMessage()], $exception->getErrorHttpCode()
             );
         }
+
         return parent::render($request, $exception);
     }
 }
