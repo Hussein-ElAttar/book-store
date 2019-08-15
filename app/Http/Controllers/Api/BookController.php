@@ -52,15 +52,13 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        $data = $request->all();
-        $description = $data['description'];
-        $quantity    = $data['quantity'];
-        $author      = $data['author'];
-        $title       = $data['title'];
-        $isbn        = $data['isbn'];
-
         $createdBook = $this->bookService->storeBook(
-            $isbn, $title, $description, $author, $quantity, Auth::user()->id
+            $request->isbn,
+            $request->title,
+            $request->description,
+            $request->author,
+            $request->quantity,
+            Auth::user()->id
         );
 
         return response()->json($createdBook);
@@ -75,20 +73,19 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, $id)
     {
-        $data = $request->all();
-        $description = $data['description'] ?? NULL;
-        $quantity    = $data['quantity'] ?? NULL;
-        $author      = $data['author'] ?? NULL;
-        $title       = $data['title'] ?? NULL;
-        $isbn        = $data['isbn'] ?? NULL;
-
         $this->ensureUserOwnsTheBook($id, Auth::user()->id);
 
         $this->bookService->updateBook(
-            $id, $isbn, $title, $description, $author, $quantity, Auth::user()->id
+            $request->id,
+            $request->isbn,
+            $request->title,
+            $request->description,
+            $request->author,
+            $request->quantity,
+            Auth::user()->id
         );
 
-        return Response::json(['message'=>'Book Updated Successfully'], 200);
+        return Response::json(self::BOOK_UPDATED, 200);
 
     }
 

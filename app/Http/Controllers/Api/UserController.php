@@ -5,9 +5,11 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\User\RegisterUserRequest;
+use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\ResetUserPasswordRequest;
 use App\Http\Requests\User\SendResetPasswordEmailRequest;
+
+// use function App\Providers\constant;
 
 class UserController extends Controller
 {
@@ -18,14 +20,13 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function register(RegisterUserRequest $request)
+    public function storeUser(storeUserRequest $request)
     {
-        $data     = $request->all();
-        $name     = $data['name'];
-        $email    = $data['email'];
-        $password = $data['password'];
-
-        $user = $this->userService->register($name, $email, $password);
+        $user = $this->userService->storeUser(
+            $request->name,
+            $request->email,
+            $request->password
+        );
 
         return response()->json($user, 200);
     }
@@ -55,7 +56,7 @@ class UserController extends Controller
 
     public function SendResetPasswordEmail(SendResetPasswordEmailRequest $request)
     {
-        $email    = $request->email;
+        $email = $request->email;
 
         $this->userService->SendResetPasswordEmail($email);
 
@@ -64,12 +65,12 @@ class UserController extends Controller
 
     public function resetPassword(ResetUserPasswordRequest $request)
     {
-        $email                 = $request->email;
-        $password              = $request->password;
-        $password_confirmation = $request->password_confirmation;
-        $token                 = $request->token;
-
-        $this->userService->resetPassword($email, $password, $password_confirmation, $token);
+        $this->userService->resetPassword(
+            $request->email,
+            $request->password,
+            $request->password_confirmation,
+            $request->token
+        );
 
         return response()->json(['message'=>'Your password was rest successfully'], 200);
     }

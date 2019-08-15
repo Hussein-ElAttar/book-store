@@ -4,10 +4,12 @@ namespace App\Services;
 use App\Constants;
 use App\Jobs\SendEmailJob;
 use App\Events\UserVerified;
+use App\Services\EmailService;
 use Illuminate\Support\Carbon;
 use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\URL;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Hash;
 use App\Services\Interfaces\IJWTService;
 use Illuminate\Support\Facades\Password;
 
@@ -15,8 +17,9 @@ class UserService
 {
     private $jwtService;
 
-    public function __construct(IJWTService $jwtService) {
-        $this->jwtService = $jwtService;
+    public function __construct(IJWTService $jwtService, EmailService $emailService) {
+        $this->jwtService   = $jwtService;
+        $this->emailService = $emailService;
     }
 
     public function getLoginTokens($credentials)
@@ -26,7 +29,7 @@ class UserService
 
     public function register($name, $email, $password)
     {
-        $user = UserRepository::storeUser($name, $email, $password);
+        $user = UserRepository::storeUser($name, $email, Hash::make($password));
         $user->assignRole('editor');
 
         $this->sendActivationLinkEmail($user, $user->email);
@@ -51,7 +54,7 @@ class UserService
             ['id' => $user->id]
         );
 
-        dispatch(new SendEmailJob($user->email, $temporarySignedURL));
+        $this->emailService->sendActivationEmailLink($user->email, $temporarySignedURL);
     }
 
     public function verifyEmail($user_id)
@@ -71,11 +74,11 @@ class UserService
         $data = compact('email', 'password', 'password_confirmation', 'token');
 
         $response = Password::broker()->reset($data, function ($user, $password) {
-            UserRepository::updateUserPasswordByModel($user, $password);
+            UserRepository::updateUserPasswordByModel($user, Hash::make($password));
         });
 
         if($response != Password::PASSWORD_RESET) {
-            throw new CustomException(trans($response), 400);
+            throw new CustomException($response, 400);
         }
     }
 
@@ -85,7 +88,7 @@ class UserService
         $response = Password::broker()->sendResetLink($data);
 
         if($response != Password::RESET_LINK_SENT) {
-            throw new CustomException(trans($response), 400);
+            throw new CustomException($response, 400);
         }
     }
 }

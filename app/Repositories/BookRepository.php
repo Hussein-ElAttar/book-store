@@ -13,7 +13,7 @@ class BookRepository implements IBookRepository
     }
 
     public static function getBooksByUserId($userId){
-        return Book::all()->where('user_id', $userId);
+        return Book::where('user_id', $userId)->get();
     }
 
     public static function getBookById($id){
