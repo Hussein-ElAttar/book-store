@@ -27,7 +27,7 @@ class BookRepository implements IBookRepository
 
     public static function updateBook($id, $isbn, $title, $description, $author, $quantity, $user_id){
         $fields = array_filter(compact('isbn', 'title', 'description', 'author', 'quantity', 'user_id'));
-        return Book::where(['id'=> $id ])->update($fields);
+        return Book::updateOrCreate(['id' => $id], $fields);
     }
 
     public static function destroyBook($id){

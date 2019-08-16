@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants;
 use App\Services\BookService;
+use App\Services\ResponseService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Lib\Responses\SuccessResponse;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
@@ -26,7 +29,9 @@ class BookController extends Controller
     {
         $books = $this->bookService->getUserBooks(Auth::user()->id);
 
-        return response()->json($books);
+        return ResponseService::getResponse(
+            new SuccessResponse($books)
+        );
     }
 
     /**
@@ -37,11 +42,11 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        $book = $this->bookService->getBookById($id);
+        $book = $this->bookService->getBookForUser($id, Auth::user()->id);
 
-        $this->ensureUserOwnsTheBook($id, Auth::user()->id);
-
-        return response()->json($book);
+        return ResponseService::getResponse(
+            new SuccessResponse($book)
+        );
     }
 
     /**
@@ -52,7 +57,7 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        $createdBook = $this->bookService->storeBook(
+        $created_book = $this->bookService->storeBook(
             $request->isbn,
             $request->title,
             $request->description,
@@ -61,7 +66,9 @@ class BookController extends Controller
             Auth::user()->id
         );
 
-        return response()->json($createdBook);
+        return ResponseService::getResponse(
+            new SuccessResponse($created_book)
+        );
     }
 
     /**
@@ -71,11 +78,9 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateBookRequest $request, $id)
+    public function update(UpdateBookRequest $request)
     {
-        $this->ensureUserOwnsTheBook($id, Auth::user()->id);
-
-        $this->bookService->updateBook(
+        $updated_book = $this->bookService->updateBook(
             $request->id,
             $request->isbn,
             $request->title,
@@ -85,8 +90,9 @@ class BookController extends Controller
             Auth::user()->id
         );
 
-        return Response::json(self::BOOK_UPDATED, 200);
-
+        return ResponseService::getResponse(
+            new SuccessResponse($updated_book, Constants::BOOK_UPDATED)
+        );
     }
 
     /**
@@ -97,10 +103,10 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        $this->ensureUserOwnsTheBook($id, Auth::user()->id);
+        $this->bookService->destroyBook($id, Auth::user()->id);
 
-        $this->bookService->destroyBook($id);
-
-        return Response::json(['message'=>'Book Deleted Successfully'], 200);
+        return ResponseService::getResponse(
+            new SuccessResponse(NULL, Constants::BOOK_DELETED)
+        );
     }
 }
