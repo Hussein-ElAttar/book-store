@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-use App\Exceptions\JWTException;
+use App\Exceptions\JWT\JWTException;
 use \Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 
 class JWTBaseMiddleware extends BaseMiddleware

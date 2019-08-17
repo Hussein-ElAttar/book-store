@@ -9,9 +9,10 @@ class CustomException extends Exception implements ICustomException
 {
     protected $httpCode;
 
-    public function __construct($msg, $httpCode) {
-        $this->message  = $msg;
-        $this->httpCode = $httpCode;
+    public function __construct($msg=NULL) {
+        if(!is_null($msg)){
+            $this->message = $msg;
+        }
     }
 
     public function getErrorMessage() {

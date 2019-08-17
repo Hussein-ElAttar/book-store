@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 
 use Illuminate\Http\Request;
-use App\Exceptions\JWTException;
+use App\Exceptions\JWT\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\JWTBaseMiddleware;

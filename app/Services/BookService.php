@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Traits\Permissible;
 use App\Exceptions\BookException;
+use App\Exceptions\Resource\ResourceForbiddenAccessException;
+use App\Exceptions\Resource\ResourceNotFoundException;
 use App\Repositories\BookRepository;
 
 class BookService
@@ -53,7 +55,7 @@ class BookService
 
         if(is_null($book))
         {
-            throw new BookException("Book Not Found", 404);
+            throw new ResourceNotFoundException("Book Not Found");
         }
 
         return $book;
@@ -69,7 +71,7 @@ class BookService
     {
         if ($book->user_id !== $user_id )
         {
-            throw new BookException("Forbidden", 403);
+            throw new ResourceForbiddenAccessException("Forbidden");
         }
     }
 }

@@ -74,6 +74,7 @@ class Handler extends ExceptionHandler
 
         // Custom App Exceptions
         if ($exception instanceof ICustomException) {
+            dd($exception);
             return response()->json(
                 ['message' => $exception->getErrorMessage()], $exception->getErrorHttpCode()
             );

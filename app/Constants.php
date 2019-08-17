@@ -14,15 +14,15 @@ class Constants {
    const HTTP_FORBIDDEN    = 403;
 
    // Book Messages
-   const BOOK_DELETED   = "Book Deleted Successfully";
-   const BOOK_UPDATED   = "Book Updated Successfully";
-   const BOOK_NOT_FOUND = "Book Not Found";
-   const BOOK_FORBIDDEN = "You cannot use this book";
+   const MSG_BOOK_DELETED   = "Book Deleted Successfully";
+   const MSG_BOOK_UPDATED   = "Book Updated Successfully";
+   const MSG_BOOK_NOT_FOUND = "Book Not Found";
+   const MSG_BOOK_FORBIDDEN = "You cannot use this book";
 
    // User Messages
-   const USER_RESET_PASSWORD_EMAIL_SENT = "We have e-mailed your password reset link";
-   const USER_ACTIVITON_LINK_SUBMITTED  = "Your Activation link has been submitted";
-   const USER_PASSWORD_RESET  = "Your password was rest successfully";
-   const USER_EMAIL_ACTIVATED = "Email verified!";
-   const USER_ALREADY_VERIFIED = "User already has verified email!";
+   const MSG_USER_RESET_PASSWORD_EMAIL_SENT = "We have e-mailed your password reset link";
+   const MSG_USER_ACTIVITON_LINK_SUBMITTED  = "Your Activation link has been submitted";
+   const MSG_USER_PASSWORD_RESET  = "Your password was rest successfully";
+   const MSG_USER_EMAIL_ACTIVATED = "Email verified!";
+   const MSG_USER_ALREADY_VERIFIED = "User already has verified email!";
 }

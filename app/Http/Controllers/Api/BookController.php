@@ -11,6 +11,7 @@ use App\Lib\Responses\SuccessResponse;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
+use App\Exceptions\Resource\ResourceForbiddenAccessException;
 
 class BookController extends Controller
 {
@@ -28,7 +29,6 @@ class BookController extends Controller
     public function index()
     {
         $books = $this->bookService->getUserBooks(Auth::user()->id);
-
         return ResponseService::getResponse(
             new SuccessResponse($books)
         );
