@@ -27,7 +27,7 @@ class UserService
         return $this->jwtService->getAccessAndRefreshTokens($credentials);
     }
 
-    public function register($name, $email, $password)
+    public function storeUser($name, $email, $password)
     {
         $user = UserRepository::storeUser($name, $email, Hash::make($password));
         $user->assignRole('editor');

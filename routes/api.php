@@ -39,6 +39,6 @@ Route::prefix('users/actions/')->group( function () {
     Route::post('login', 'Api\UserController@login');
     Route::post('send-reset-password-mail','Api\UserController@SendResetPasswordEmail');
     Route::post('reset-password','Api\UserController@resetPassword');
-    Route::post('register','Api\UserController@register');
+    Route::post('register','Api\UserController@storeUser');
 });
 
