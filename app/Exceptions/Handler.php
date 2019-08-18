@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use App\Services\ResponseService;
 use App\Exceptions\Interfaces\JWTException;
 use App\Exceptions\Interfaces\ICustomException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -56,26 +57,26 @@ class Handler extends ExceptionHandler
         // Spatie Exceptions
         if ($exception instanceof SpatieUnauthorizedException)
         {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return ResponseService::getFailureResponse(null, 'Unauthorized', 403);
         }
 
         // Tymon JWT Exceptions
         if ($exception instanceof TokenExpiredException)
         {
-            return response()->json(['message' => 'Token expired'], 401);
+            return ResponseService::getFailureResponse(null, 'Token expired', 401);
         }
         else if ($exception instanceof TokenInvalidException)
         {
-            return response()->json(['message' => 'Invalid token'], 401);
+            return ResponseService::getFailureResponse(null, 'Invalid token', 401);
         }
         else if ($exception instanceof TokenBlacklistedException) {
-            return response()->json(['message' => 'Token Blacklisted'], 401);
+            return ResponseService::getFailureResponse(null, 'Token Blacklisted', 401);
         }
 
         // Custom App Exceptions
         if ($exception instanceof ICustomException) {
-            return response()->json(
-                ['message' => $exception->getErrorMessage()], $exception->getErrorHttpCode()
+            return ResponseService::getFailureResponse(
+                null, $exception->getErrorMessage(), $exception->getErrorHttpCode()
             );
         }
 

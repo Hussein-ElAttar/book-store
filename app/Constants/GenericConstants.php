@@ -1,7 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Constants;
 
-class Constants {
+class GenericConstants {
    const EMAIL_VALIDATION_URL_TTL_MINUTES = 60;
 }

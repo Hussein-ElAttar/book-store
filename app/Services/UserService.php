@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Services;
-use App\Constants;
-use App\Jobs\SendEmailJob;
+use App\Constants\GenericConstants;
 use App\Events\UserVerified;
+use App\Services\EmailService;
 use Illuminate\Support\Carbon;
-use App\Exceptions\CustomException;
+use App\Exceptions\UserException;
 use Illuminate\Support\Facades\URL;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Hash;
+use App\Constants\ExceptionConstants;
 use App\Services\Interfaces\IJWTService;
 use Illuminate\Support\Facades\Password;
 
@@ -15,8 +17,9 @@ class UserService
 {
     private $jwtService;
 
-    public function __construct(IJWTService $jwtService) {
-        $this->jwtService = $jwtService;
+    public function __construct(IJWTService $jwtService, EmailService $emailService) {
+        $this->jwtService   = $jwtService;
+        $this->emailService = $emailService;
     }
 
     public function getLoginTokens($credentials)
@@ -26,7 +29,7 @@ class UserService
 
     public function register($name, $email, $password)
     {
-        $user = UserRepository::storeUser($name, $email, $password);
+        $user = UserRepository::storeUser($name, $email, Hash::make($password));
         $user->assignRole('editor');
 
         $this->sendActivationLinkEmail($user, $user->email);
@@ -42,16 +45,16 @@ class UserService
     public function sendActivationLinkEmail($user)
     {
         if ($user->hasVerifiedEmail()) {
-            throw new CustomException('User already has verified email!', 422);
+            throw new UserException(ExceptionConstants::USER_ALREADY_VERIFIED);
         }
 
         $temporarySignedURL = URL::temporarySignedRoute(
             'verifyUserEmail',
-            Carbon::now()->addMinutes(Constants::EMAIL_VALIDATION_URL_TTL_MINUTES),
+            Carbon::now()->addMinutes(GenericConstants::EMAIL_VALIDATION_URL_TTL_MINUTES),
             ['id' => $user->id]
         );
 
-        dispatch(new SendEmailJob($user->email, $temporarySignedURL));
+        $this->emailService->sendActivationEmailLink($user->email, $temporarySignedURL);
     }
 
     public function verifyEmail($user_id)
@@ -59,7 +62,7 @@ class UserService
         $user = UserRepository::getUserById($user_id);
 
         if ($user->hasVerifiedEmail()) {
-            throw new CustomException('Email Already Verified', 422);
+            throw new UserException(ExceptionConstants::USER_ALREADY_VERIFIED);
         }
 
         $user->markEmailAsVerified();
@@ -71,11 +74,11 @@ class UserService
         $data = compact('email', 'password', 'password_confirmation', 'token');
 
         $response = Password::broker()->reset($data, function ($user, $password) {
-            UserRepository::updateUserPasswordByModel($user, $password);
+            UserRepository::updateUserPasswordByModel($user, Hash::make($password));
         });
 
         if($response != Password::PASSWORD_RESET) {
-            throw new CustomException(trans($response), 400);
+            throw new UserException($response);
         }
     }
 
@@ -85,7 +88,7 @@ class UserService
         $response = Password::broker()->sendResetLink($data);
 
         if($response != Password::RESET_LINK_SENT) {
-            throw new CustomException(trans($response), 400);
+            throw new UserException($response);
         }
     }
 }

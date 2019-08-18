@@ -1,13 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Services\ResponseService;
+use App\Constants\MessageConstants;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\User\RegisterUserRequest;
+use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\ResetUserPasswordRequest;
 use App\Http\Requests\User\SendResetPasswordEmailRequest;
+
+// use function App\Providers\constant;
 
 class UserController extends Controller
 {
@@ -18,14 +23,13 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function register(RegisterUserRequest $request)
+    public function storeUser(storeUserRequest $request)
     {
-        $data     = $request->all();
-        $name     = $data['name'];
-        $email    = $data['email'];
-        $password = $data['password'];
-
-        $user = $this->userService->register($name, $email, $password);
+        $user = $this->userService->storeUser(
+            $request->name,
+            $request->email,
+            $request->password
+        );
 
         return response()->json($user, 200);
     }
@@ -50,28 +54,28 @@ class UserController extends Controller
     {
         $this->userService->sendActivationLinkEmail(Auth::user());
 
-        return response()->json('Your Activation link has been submitted');
+        return ResponseService::getSuccessResponse(null, MessageConstants::USER_ACTIVITON_LINK_EMAIL_SENT);
     }
 
     public function SendResetPasswordEmail(SendResetPasswordEmailRequest $request)
     {
-        $email    = $request->email;
+        $email = $request->email;
 
         $this->userService->SendResetPasswordEmail($email);
 
-        return response()->json(['message'=>'We have e-mailed your password reset link!'], 200);
+        return ResponseService::getSuccessResponse(null, MessageConstants::USER_RESET_PASSWORD_EMAIL_SENT);
     }
 
     public function resetPassword(ResetUserPasswordRequest $request)
     {
-        $email                 = $request->email;
-        $password              = $request->password;
-        $password_confirmation = $request->password_confirmation;
-        $token                 = $request->token;
+        $this->userService->resetPassword(
+            $request->email,
+            $request->password,
+            $request->password_confirmation,
+            $request->token
+        );
 
-        $this->userService->resetPassword($email, $password, $password_confirmation, $token);
-
-        return response()->json(['message'=>'Your password was rest successfully'], 200);
+        return ResponseService::getSuccessResponse(null, MessageConstants::USER_PASSWORD_RESET);
     }
 
     public function verifyEmail(Request $request)
@@ -80,13 +84,14 @@ class UserController extends Controller
 
         $this->userService->verifyEmail($user_id);
 
-        return response()->json('Email verified!');
+        return ResponseService::getSuccessResponse(null, MessageConstants::USER_EMAIL_ACTIVATED);
+
     }
 
     protected function respondWithTokens($accessToken, $refreshToken)
     {
         $response = array_filter(compact('accessToken', 'refreshToken'));
 
-        return response()->json($response);
+        return ResponseService::getSuccessResponse($response);
     }
 }

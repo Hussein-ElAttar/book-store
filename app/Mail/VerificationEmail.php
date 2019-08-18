@@ -2,16 +2,12 @@
 
 namespace App\Mail;
 
-use App\Constants;
-use Illuminate\Bus\Queueable;
+use App\Constants\GenericConstants;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class VerificationEmail extends Mailable
+class VerificationEmail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
-
     /**
      * Create a new message instance.
      *
@@ -31,7 +27,7 @@ class VerificationEmail extends Mailable
     {
         return $this->view('emails.verificationEmail', [
             "activation_link"=>$this->activation_link,
-            "email_ttl_minutes"=>Constants::EMAIL_VALIDATION_URL_TTL_MINUTES
+            "email_ttl_minutes"=>GenericConstants::EMAIL_VALIDATION_URL_TTL_MINUTES
         ]);
     }
 }
