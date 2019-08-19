@@ -26,10 +26,14 @@ trait MapsTymonJwtMiddlewares {
             throw new JWTException(ExceptionConstants::TOKEN_INVALID);
         }
 
-        if (is_null(auth('api')->user())){
+        $user = JWTAuth::user();
+
+        if (is_null($user)){
             throw new JWTException(ExceptionConstants::TOKEN_USER_WAS_REMOVED);
         }
-        Auth::setUser(auth('api')->user());
+
+        auth('api')->setUser($user);
+        Auth::setUser($user);
 
         return $response;
     }
