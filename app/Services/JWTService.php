@@ -6,7 +6,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Exceptions\CustomException;
 use App\Services\Interfaces\IJWTService;
 
-class TymonJWTService implements IJWTService
+class JWTService implements IJWTService
 {
     const REFRESH_TOKEN_TTL_MINTUES = 60*24; // 24 hours
     const ACCESS_TOKEN_TTL_MINUTES  = 60; // 1 hour

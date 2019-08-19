@@ -15,8 +15,8 @@ class JWTServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            'App\Services\Interfaces\IJWTService',
-            'App\Services\TymonJWTService'
+            \App\Services\Interfaces\IJWTService::class,
+            \App\Services\JWTService::class
         );
     }
 
