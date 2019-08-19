@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Exceptions\CustomException;
-use Illuminate\Support\Facades\Cache;
 use App\Services\Interfaces\IJWTService;
 
 class TymonJWTService implements IJWTService
@@ -24,27 +23,19 @@ class TymonJWTService implements IJWTService
         $refresh_token = auth('api')->claims(['type' => 'refresh_token'])
             ->setTTL(self::REFRESH_TOKEN_TTL_MINTUES)->attempt($credentials);
 
-        Cache::put($refresh_token, $access_token);
-
         return compact('access_token', 'refresh_token');
     }
 
-    public function refreshJWT($user)
+    public function refreshJWT()
     {
-        $refresh_token    = JWTAuth::getToken();
-        $old_access_token = Cache::get($refresh_token);
+        // token is already refreshed within the middleware
+        return JWTAuth::getToken()->get();
+    }
 
-        // blacklist the old token
-        if(!is_null($old_access_token)) {
-            JWTAuth::setToken($old_access_token);
-            JWTAuth::invalidate();
-        }
-        $new_access_token = JWTAuth::claims(['type' => 'access_token'])
-            ->fromUser($user);
+    public function revokeJWT($token){
+        JWTAuth::setToken($token);
+        JWTAuth::invalidate();
 
-        // store the newly created (latest) access token
-        Cache::put($refresh_token, $new_access_token, self::ACCESS_TOKEN_TTL_MINUTES * 60);
-
-        return $new_access_token;
+        return $token;
     }
 }

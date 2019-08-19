@@ -6,5 +6,7 @@ interface IJWTService
 {
     public function getAccessAndRefreshTokens($credentials);
 
-    public function refreshJWT($user);
+    public function refreshJWT();
+
+    public function revokeJWT($token);
 }

@@ -37,9 +37,14 @@ class UserService
         return $user;
     }
 
-    public function getNewAccessToken($user)
+    public function refreshJWT()
     {
-        return $this->jwtService->refreshJWT($user);
+        return $this->jwtService->refreshJWT();
+    }
+
+    public function revokeJWT($token)
+    {
+        $this->jwtService->revokeJWT($token);
     }
 
     public function sendActivationLinkEmail($user)
