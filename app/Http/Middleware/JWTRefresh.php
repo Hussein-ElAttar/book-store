@@ -12,6 +12,6 @@ class JWTRefresh extends RefreshToken
 
     public function handle($request, Closure $next)
     {
-        return $this->MapsTymonJwtMiddlewares($request, $next, 'refresh_token');
+        return $this->MapTymonJwtMiddlewares($request, $next, 'refresh_token');
     }
 }

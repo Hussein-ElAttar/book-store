@@ -12,6 +12,6 @@ class JWTAuthenticate extends Authenticate
 
     public function handle($request, Closure $next)
     {
-        return $this->mapTymonJwtMiddlewares($request, $next, 'access_token');
+        return $this->mapTymonJwtMiddlewares($request, function(){return true;}, 'access_token');
     }
 }
