@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Exceptions\CustomException;
+use Illuminate\Support\Facades\Auth;
 use App\Services\Interfaces\IJWTService;
 
 class JWTService implements IJWTService
@@ -21,7 +22,7 @@ class JWTService implements IJWTService
         }
 
         $refresh_token = auth('api')->claims(['type' => 'refresh_token'])
-            ->setTTL(self::REFRESH_TOKEN_TTL_MINTUES)->attempt($credentials);
+            ->setTTL(self::REFRESH_TOKEN_TTL_MINTUES)->fromUser(auth('api')->user());
 
         return compact('access_token', 'refresh_token');
     }
