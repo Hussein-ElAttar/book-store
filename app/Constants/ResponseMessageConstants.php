@@ -2,7 +2,7 @@
 
 namespace App\Constants;
 
-class MessageConstants
+class ResponseMessageConstants
 {
 
    // Book Messages

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\ResponseService;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Constants\MessageConstants;
+use App\Constants\ResponseMessageConstants;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\User\StoreUserRequest;
@@ -63,7 +63,7 @@ class UserController extends Controller
     {
         $this->userService->sendActivationLinkEmail(Auth::user());
 
-        return ResponseService::getSuccessResponse(null, MessageConstants::USER_ACTIVITON_LINK_EMAIL_SENT);
+        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_ACTIVITON_LINK_EMAIL_SENT);
     }
 
     public function SendResetPasswordEmail(SendResetPasswordEmailRequest $request)
@@ -72,7 +72,7 @@ class UserController extends Controller
 
         $this->userService->SendResetPasswordEmail($email);
 
-        return ResponseService::getSuccessResponse(null, MessageConstants::USER_RESET_PASSWORD_EMAIL_SENT);
+        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_RESET_PASSWORD_EMAIL_SENT);
     }
 
     public function resetPassword(ResetUserPasswordRequest $request)
@@ -84,7 +84,7 @@ class UserController extends Controller
             $request->token
         );
 
-        return ResponseService::getSuccessResponse(null, MessageConstants::USER_PASSWORD_RESET);
+        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_PASSWORD_RESET);
     }
 
     public function verifyEmail(Request $request)
@@ -93,7 +93,7 @@ class UserController extends Controller
 
         $this->userService->verifyEmail($user_id);
 
-        return ResponseService::getSuccessResponse(null, MessageConstants::USER_EMAIL_ACTIVATED);
+        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_EMAIL_ACTIVATED);
 
     }
 
