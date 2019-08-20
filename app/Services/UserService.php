@@ -55,7 +55,7 @@ class UserService
         }
 
         $temporarySignedURL = URL::temporarySignedRoute(
-            'verifyUserEmail',
+            'activateUserEmail',
             Carbon::now()->addMinutes(Config::get('constants.user_activation_temp_url_ttl_minutes')),
             ['id' => $user->id]
         );
@@ -63,7 +63,7 @@ class UserService
         $this->emailService->sendActivationEmailLink($user->email, $temporarySignedURL);
     }
 
-    public function verifyEmail($user_id)
+    public function activateUser($user_id)
     {
         $user = UserRepository::getUserById($user_id);
 

@@ -14,5 +14,5 @@ class ResponseMessageConstants
    const USER_ACTIVITON_LINK_EMAIL_SENT  = "Your Activation link has been sent to your email";
    const USER_PASSWORD_RESET  = "Your password was rest successfully";
    const USER_EMAIL_ACTIVATED = "Email verified!";
-   const USER_ALREADY_VERIFIED = "User already has verified email!";
+
 }

@@ -3,7 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use App\Http\Middleware\ValidateEmailVerificationURL;
+use App\Http\Middleware\ValidateUserActivationURL;
 
 class Kernel extends HttpKernel
 {
@@ -61,7 +61,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'email.verification.url.validate' => \App\Http\Middleware\ValidateEmailVerificationURL::class,
+        'user.activation.url.validate' => \App\Http\Middleware\ValidateUserActivationURL::class,
         'jwt.revoke' => \App\Http\Middleware\JWTRevoke::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,

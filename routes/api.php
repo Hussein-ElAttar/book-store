@@ -29,8 +29,8 @@ Route::prefix('users/actions/')->group( function () {
     Route::get('send-email-activation-link', 'Api\UserController@sendActivationLinkEmail')
         ->middleware('jwt.auth');
 
-    Route::get('verify-email', 'Api\UserController@verifyEmail')
-        ->name('verifyUserEmail')
+    Route::get('activate-user', 'Api\UserController@activateUser')
+        ->name('activateUserEmail')
         ->middleware('email.verification.url.validate');
 
     Route::get('refresh-jwt', 'Api\UserController@refreshJWT')

@@ -87,11 +87,11 @@ class UserController extends Controller
         return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_PASSWORD_RESET);
     }
 
-    public function verifyEmail(Request $request)
+    public function activateUser(Request $request)
     {
         $user_id = $request->get('id');
 
-        $this->userService->verifyEmail($user_id);
+        $this->userService->activateUser($user_id);
 
         return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_EMAIL_ACTIVATED);
 

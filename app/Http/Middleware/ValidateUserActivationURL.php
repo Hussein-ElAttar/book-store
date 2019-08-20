@@ -6,7 +6,7 @@ use Closure;
 
 use App\Exceptions\CustomException;
 
-class ValidateEmailVerificationURL
+class ValidateUserActivationURL
 {
     public function handle($request, Closure $next)
     {
