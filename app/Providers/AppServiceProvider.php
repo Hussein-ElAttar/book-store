@@ -14,6 +14,9 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        // \DB::listen(function($query){
+        //     dump($query->sql, $query->time);
+        //     });
     }
 
     /**

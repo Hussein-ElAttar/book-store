@@ -2,8 +2,9 @@
 
 namespace App\Mail;
 
-use App\Constants\GenericConstants;
 use Illuminate\Mail\Mailable;
+use App\Constants\GenericConstants;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class VerificationEmail extends Mailable implements ShouldQueue
@@ -26,8 +27,8 @@ class VerificationEmail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->view('emails.verificationEmail', [
-            "activation_link"=>$this->activation_link,
-            "email_ttl_minutes"=>GenericConstants::EMAIL_VALIDATION_URL_TTL_MINUTES
+            "activation_link"=> $this->activation_link,
+            "email_ttl_minutes"=> Config::get('constants.user_activation_temp_url_ttl_minutes'),
         ]);
     }
 }

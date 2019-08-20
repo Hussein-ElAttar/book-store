@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Services;
-use App\Constants\GenericConstants;
 use App\Events\UserVerified;
 use App\Services\EmailService;
 use Illuminate\Support\Carbon;
 use App\Exceptions\UserException;
+use App\Constants\GenericConstants;
 use Illuminate\Support\Facades\URL;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use App\Constants\ExceptionConstants;
+use Illuminate\Support\Facades\Config;
 use App\Services\Interfaces\IJWTService;
 use Illuminate\Support\Facades\Password;
 
@@ -55,7 +56,7 @@ class UserService
 
         $temporarySignedURL = URL::temporarySignedRoute(
             'verifyUserEmail',
-            Carbon::now()->addMinutes(GenericConstants::EMAIL_VALIDATION_URL_TTL_MINUTES),
+            Carbon::now()->addMinutes(Config::get('constants.user_activation_temp_url_ttl_minutes')),
             ['id' => $user->id]
         );
 
