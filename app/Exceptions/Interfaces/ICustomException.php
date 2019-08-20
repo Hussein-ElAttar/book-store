@@ -6,7 +6,8 @@ use Throwable;
 
 Interface ICustomException extends Throwable
 {
-    public function getErrorMessage();
+    public function getErrors();
 
-    public function getErrorHttpCode();
+    public function getStatusCode();
+
 }

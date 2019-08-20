@@ -4,13 +4,13 @@ namespace App\Exceptions;
 
 use Exception;
 use App\Services\ResponseService;
-use App\Exceptions\Interfaces\JWTException;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Validation\ValidationException;
 use App\Exceptions\Interfaces\ICustomException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Spatie\Permission\Exceptions\UnauthorizedException as SpatieUnauthorizedException;
 
 class Handler extends ExceptionHandler
@@ -57,26 +57,23 @@ class Handler extends ExceptionHandler
         // Spatie Exceptions
         if ($exception instanceof SpatieUnauthorizedException)
         {
-            return ResponseService::getFailureResponse(null, 'Unauthorized', 403);
+            return ResponseService::getFailureResponse(
+                null, $exception->getMessage(), $exception->getStatusCode()
+            );
         }
 
         // Tymon JWT Exceptions
-        if ($exception instanceof TokenExpiredException)
+        if ($exception instanceof JWTException)
         {
-            return ResponseService::getFailureResponse(null, 'Token expired', 401);
-        }
-        else if ($exception instanceof TokenInvalidException)
-        {
-            return ResponseService::getFailureResponse(null, 'Invalid token', 401);
-        }
-        else if ($exception instanceof TokenBlacklistedException) {
-            return ResponseService::getFailureResponse(null, 'Token Blacklisted', 401);
+            return ResponseService::getFailureResponse(
+                null, $exception->message, $exception->statusCode
+            );
         }
 
         // Custom App Exceptions
         if ($exception instanceof ICustomException) {
             return ResponseService::getFailureResponse(
-                null, $exception->getErrorMessage(), $exception->getErrorHttpCode()
+                $exception->getErrors(), $exception->getMessage(), $exception->getStatusCode()
             );
         }
 

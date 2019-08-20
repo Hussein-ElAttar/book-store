@@ -7,29 +7,32 @@ use App\Exceptions\Interfaces\ICustomException;
 
 class CustomException extends Exception implements ICustomException
 {
-    protected $httpCode = 400;
+    protected $statusCode = 400;
+    protected $errors;
 
-    public function __construct($const = []) {
+    public function __construct($const = [], $errors = []) {
         if(is_array($const)){
             $this->message  = $const[0] ?? '';
-            $this->httpCode = $const[1] ?? $this->httpCode;
+            $this->statusCode = $const[1] ?? $this->statusCode;
         }
         else if(is_int($const))
         {
             $this->message  = '';
-            $this->httpCode = $const;
+            $this->statusCode = $const;
         }
         else if(is_string($const))
         {
             $this->message  = $const;
         }
+
+        $this->errors = $errors;
     }
 
-    public function getErrorMessage() {
-        return $this->message;
+    public function getStatusCode() {
+        return $this->statusCode;
     }
 
-    public function getErrorHttpCode() {
-        return $this->httpCode;
+    public function getErrors() {
+        return $this->errors;
     }
 }
