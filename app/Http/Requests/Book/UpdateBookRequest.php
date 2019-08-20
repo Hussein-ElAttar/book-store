@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Book;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\FormRequestBase;
 
-class UpdateBookRequest extends FormRequest
+class UpdateBookRequest  extends FormRequestBase
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,4 +32,5 @@ class UpdateBookRequest extends FormRequest
             'description' => 'max:255',
         ];
     }
+    
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\User;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\FormRequestBase;
 
-class SendResetPasswordEmailRequest extends FormRequest
+class SendResetPasswordEmailRequest extends FormRequestBase
 {
     /**
      * Determine if the user is authorized to make this request.

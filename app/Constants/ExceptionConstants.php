@@ -14,4 +14,6 @@ class ExceptionConstants
    const TOKEN_BAD_REQUEST      = ['Token Bad request', 400];
    const TOKEN_USER_WAS_REMOVED = ['User No Longer Exists', 400];
 
+   // Validation
+   const VALIDATION_INVALID_DATA = ['The given data is invalid', 422];
 }
