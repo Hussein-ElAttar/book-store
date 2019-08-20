@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Exceptions\CustomException;
-use Illuminate\Support\Facades\Auth;
 use App\Services\Interfaces\IJWTService;
 
 class JWTService implements IJWTService
@@ -12,7 +11,7 @@ class JWTService implements IJWTService
     const REFRESH_TOKEN_TTL_MINTUES = 60*24; // 24 hours
     const ACCESS_TOKEN_TTL_MINUTES  = 60; // 1 hour
 
-    public function getAccessAndRefreshTokens($credentials)
+    public function authenticate($credentials)
     {
         $access_token = auth('api')->claims(['type' => 'access_token'])
             ->attempt($credentials);
@@ -27,10 +26,13 @@ class JWTService implements IJWTService
         return compact('access_token', 'refresh_token');
     }
 
-    public function refreshJWT()
+    public function refreshJWT($refreshToken)
     {
-        // token is already refreshed within the middleware
-        return JWTAuth::getToken()->get();
+        JWTAuth::setToken($refreshToken);
+
+        $accessToken = JWTAuth::parseToken()->refresh();
+
+        return $accessToken;
     }
 
     public function revokeJWT($token){

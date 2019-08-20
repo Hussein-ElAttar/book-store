@@ -19,7 +19,7 @@ class JWTRevoke extends BaseMiddleware
         try {
             parent::authenticate($request, $next);
         } catch (Exception $e) {
-            $this->mapTokenExceptions($e);
+            $this->mapTymonJwtExceptions($e);
         }
         if (is_null(auth('api')->user())){
             throw new JWTException(ExceptionConstants::TOKEN_USER_WAS_REMOVED);

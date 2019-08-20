@@ -33,15 +33,18 @@ Route::prefix('users/actions/')->group( function () {
         ->name('activateUserEmail')
         ->middleware('email.verification.url.validate');
 
-    Route::get('refresh-jwt', 'Api\UserController@refreshJWT')
-        ->middleware('jwt.refresh');
-
-    Route::post('revoke-jwt','Api\UserController@revokeJWT')
-        ->middleware('jwt.revoke');
-
-    Route::post('login', 'Api\UserController@login');
     Route::post('send-reset-password-mail','Api\UserController@SendResetPasswordEmail');
     Route::post('reset-password','Api\UserController@resetPassword');
     Route::post('register','Api\UserController@storeUser');
 });
 
+
+Route::prefix('auth/actions/')->group( function () {
+    Route::get('refresh-jwt', 'Api\AuthController@refreshJWT')
+        ->middleware('jwt.refresh');
+
+    Route::post('revoke-jwt','Api\AuthController@revokeJWT')
+        ->middleware('jwt.revoke');
+
+    Route::post('authenticate', 'Api\AuthController@authenticate');
+});

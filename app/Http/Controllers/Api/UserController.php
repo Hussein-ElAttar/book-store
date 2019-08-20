@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\ResponseService;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Constants\ResponseMessageConstants;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -33,30 +32,6 @@ class UserController extends Controller
         );
 
         return response()->json($user, 200);
-    }
-
-    public function login()
-    {
-        $credentials = request(['email', 'password']);
-
-        $tokens = $this->userService->getLoginTokens($credentials);
-
-        return $this->respondWithTokens($tokens['access_token'], $tokens['refresh_token']);
-    }
-
-    public function refreshJWT(Request $request)
-    {
-        $accessToken = $this->userService->refreshJWT();
-
-        return $this->respondWithTokens($accessToken, null);
-    }
-
-    public function revokeJWT(Request $request){
-        $token = JWTAuth::getToken();
-
-        $this->userService->revokeJWT($token);
-
-        return ResponseService::getSuccessResponse($token);
     }
 
     public function sendActivationLinkEmail()
@@ -95,12 +70,5 @@ class UserController extends Controller
 
         return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_EMAIL_ACTIVATED);
 
-    }
-
-    protected function respondWithTokens($accessToken, $refreshToken)
-    {
-        $response = array_filter(compact('accessToken', 'refreshToken'));
-
-        return ResponseService::getSuccessResponse($response);
     }
 }

@@ -66,7 +66,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof JWTException)
         {
             return ResponseService::getFailureResponse(
-                null, $exception->message, $exception->statusCode
+                null, $exception->getMessage()
             );
         }
 

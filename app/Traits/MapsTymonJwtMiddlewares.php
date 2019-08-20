@@ -14,6 +14,7 @@ trait MapsTymonJwtMiddlewares {
 
     public function MapTymonJwtMiddlewares($request, Closure $next, $token_type = null)
     {
+
         try {
             $response = parent::handle($request, $next);
         } catch (Exception $e) {
@@ -26,7 +27,7 @@ trait MapsTymonJwtMiddlewares {
             throw new JWTException(ExceptionConstants::TOKEN_INVALID);
         }
 
-        $user = JWTAuth::user();
+        $user = JWTAuth::user() ?? auth('api')->user();
 
         if (is_null($user)){
             throw new JWTException(ExceptionConstants::TOKEN_USER_WAS_REMOVED);

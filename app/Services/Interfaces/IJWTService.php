@@ -4,9 +4,9 @@ namespace App\Services\Interfaces;
 
 interface IJWTService
 {
-    public function getAccessAndRefreshTokens($credentials);
+    public function authenticate($credentials);
 
-    public function refreshJWT();
+    public function refreshJWT($token);
 
     public function revokeJWT($token);
 }

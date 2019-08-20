@@ -23,11 +23,6 @@ class UserService
         $this->emailService = $emailService;
     }
 
-    public function getLoginTokens($credentials)
-    {
-        return $this->jwtService->getAccessAndRefreshTokens($credentials);
-    }
-
     public function storeUser($name, $email, $password)
     {
         $user = UserRepository::storeUser($name, $email, Hash::make($password));
@@ -38,16 +33,6 @@ class UserService
         return $user;
     }
 
-    public function refreshJWT()
-    {
-        return $this->jwtService->refreshJWT();
-    }
-
-    public function revokeJWT($token)
-    {
-        $this->jwtService->revokeJWT($token);
-    }
-
     public function sendActivationLinkEmail($user)
     {
         if ($user->hasVerifiedEmail()) {
@@ -56,8 +41,9 @@ class UserService
 
         $temporarySignedURL = URL::temporarySignedRoute(
             'activateUserEmail',
-            Carbon::now()->addMinutes(Config::get('constants.user_activation_temp_url_ttl_minutes')),
-            ['id' => $user->id]
+            Carbon::now()->addMinutes(
+                Config::get('constants.user_activation_temp_url_ttl_minutes')
+            ),['id' => $user->id]
         );
 
         $this->emailService->sendActivationEmailLink($user->email, $temporarySignedURL);
