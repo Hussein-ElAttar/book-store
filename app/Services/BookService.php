@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Constants\ExceptionConstants;
-use App\Exceptions\BookException;
+use App\Exceptions\CustomException;
 use App\Repositories\BookRepository;
 
 class BookService
@@ -53,7 +53,7 @@ class BookService
 
         if(is_null($book))
         {
-            throw new BookException(ExceptionConstants::RESOURCE_NOT_FOUND);
+            throw new CustomException(ExceptionConstants::RESOURCE_NOT_FOUND);
         }
 
         return $book;
@@ -69,7 +69,7 @@ class BookService
     {
         if ($book->user_id !== $user_id )
         {
-            throw new BookException(ExceptionConstants::RESOURCE_FORBIDDEN);
+            throw new CustomException(ExceptionConstants::RESOURCE_FORBIDDEN);
         }
     }
 }

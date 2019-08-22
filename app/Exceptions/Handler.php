@@ -13,6 +13,8 @@ use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Spatie\Permission\Exceptions\UnauthorizedException as SpatieUnauthorizedException;
 
+use function PHPSTORM_META\type;
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -58,7 +60,10 @@ class Handler extends ExceptionHandler
         if ($exception instanceof SpatieUnauthorizedException)
         {
             return ResponseService::getFailureResponse(
-                null, $exception->getMessage(), $exception->getStatusCode()
+                null,
+                null,
+                $exception->getMessage(),
+                $exception->getStatusCode()
             );
         }
 
@@ -66,14 +71,19 @@ class Handler extends ExceptionHandler
         if ($exception instanceof JWTException)
         {
             return ResponseService::getFailureResponse(
-                null, $exception->getMessage()
+                null,
+                null,
+                $exception->getMessage()
             );
         }
 
         // Custom App Exceptions
         if ($exception instanceof ICustomException) {
             return ResponseService::getFailureResponse(
-                $exception->getErrors(), $exception->getMessage(), $exception->getStatusCode()
+                $exception->getCode(),
+                $exception->getErrors(),
+                $exception->getMessage(),
+                $exception->getStatusCode()
             );
         }
 

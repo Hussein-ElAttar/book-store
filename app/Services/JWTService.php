@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\ExceptionConstants;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Exceptions\CustomException;
 use App\Services\Interfaces\IJWTService;
@@ -17,7 +18,7 @@ class JWTService implements IJWTService
             ->attempt($credentials);
 
         if (! $access_token) {
-            throw new CustomException('Unauthorized', 401);
+            throw new CustomException(ExceptionConstants::USER_WRONG_EMAIL_OR_PASS);
         }
 
         $refresh_token = auth('api')->claims(['type' => 'refresh_token'])

@@ -4,7 +4,7 @@ namespace App\Services;
 use App\Events\UserVerified;
 use App\Services\EmailService;
 use Illuminate\Support\Carbon;
-use App\Exceptions\UserException;
+use App\Exceptions\CustomException;
 use App\Constants\GenericConstants;
 use Illuminate\Support\Facades\URL;
 use App\Repositories\UserRepository;
@@ -36,7 +36,7 @@ class UserService
     public function sendActivationLinkEmail($user)
     {
         if ($user->hasVerifiedEmail()) {
-            throw new UserException(ExceptionConstants::USER_ALREADY_VERIFIED);
+            throw new CustomException(ExceptionConstants::USER_ALREADY_VERIFIED);
         }
 
         $temporarySignedURL = URL::temporarySignedRoute(
@@ -54,7 +54,7 @@ class UserService
         $user = UserRepository::getUserById($user_id);
 
         if ($user->hasVerifiedEmail()) {
-            throw new UserException(ExceptionConstants::USER_ALREADY_VERIFIED);
+            throw new CustomException(ExceptionConstants::USER_ALREADY_VERIFIED);
         }
 
         $user->markEmailAsVerified();
@@ -70,7 +70,7 @@ class UserService
         });
 
         if($response != Password::PASSWORD_RESET) {
-            throw new UserException($response);
+            throw new CustomException($response);
         }
     }
 
@@ -80,7 +80,7 @@ class UserService
         $response = Password::broker()->sendResetLink($data);
 
         if($response != Password::RESET_LINK_SENT) {
-            throw new UserException($response);
+            throw new CustomException($response);
         }
     }
 }

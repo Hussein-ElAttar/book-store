@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Constants;
-use App\Models\Book;
 use App\Services\BookService;
 use App\Services\ResponseService;
 use App\Http\Controllers\Controller;

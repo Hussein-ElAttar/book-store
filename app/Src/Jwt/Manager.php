@@ -3,7 +3,7 @@
 namespace App\Src\Jwt;
 
 use Tymon\JWTAuth\Token;
-use App\Exceptions\JWTException;
+use App\Exceptions\CustomException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Constants\ExceptionConstants;
 use Tymon\JWTAuth\Manager as TymonManager;
@@ -14,7 +14,7 @@ class Manager extends TymonManager
     {
         $decoded = $this->decode($token);
         if(JWTAuth::parseToken()->getClaim('type') !== 'refresh_token'){
-            throw new JWTException(ExceptionConstants::TOKEN_INVALID);
+            throw new CustomException(ExceptionConstants::TOKEN_INVALID);
         }
         $this->setRefreshFlow();
         $claims = $this->buildRefreshClaims($decoded);

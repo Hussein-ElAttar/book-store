@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Exception;
-use App\Exceptions\JWTException;
+use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\Auth;
 use App\Constants\ExceptionConstants;
 use App\Traits\MapsTymonJwtExceptions;
@@ -22,7 +22,7 @@ class JWTRevoke extends BaseMiddleware
             $this->mapTymonJwtExceptions($e);
         }
         if (is_null(auth('api')->user())){
-            throw new JWTException(ExceptionConstants::TOKEN_USER_WAS_REMOVED);
+            throw new CustomException(ExceptionConstants::TOKEN_USER_WAS_REMOVED);
         }
         Auth::setUser(auth('api')->user());
 
