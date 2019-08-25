@@ -32,7 +32,7 @@ class AuthController extends Controller
     public function refreshJWT()
     {
         // Tymon Middlewares handles the refresh and send it back in the header
-        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::TOKEN_REFRESHED);
+        return ResponseService::getSuccessResponse([], ResponseMessageConstants::TOKEN_REFRESHED);
     }
 
     public function revokeJWT(){
@@ -40,10 +40,10 @@ class AuthController extends Controller
 
         $this->jwtService->revokeJWT($token);
 
-        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::TOKEN_INVALIDATED);
+        return ResponseService::getSuccessResponse([], ResponseMessageConstants::TOKEN_INVALIDATED);
     }
 
-    protected function respondWithTokens($accessToken, $refreshToken)
+    protected function respondWithTokens(string $accessToken, string $refreshToken)
     {
         $response = array_filter(compact('accessToken', 'refreshToken'));
 

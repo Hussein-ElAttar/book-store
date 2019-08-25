@@ -11,18 +11,18 @@ class CustomException extends Exception implements ICustomException
     protected $statusCode;
     protected $errors;
 
-    public function __construct($exceptionCode, $errors = []) {
-        $this->code       = $exceptionCode ?? 0;
-        $this->message    = ExceptionConstants::MESSAGES[$exceptionCode] ?? '';
-        $this->statusCode = ExceptionConstants::HTTP_CODES[$exceptionCode] ?? 400;
+    public function __construct(int $exceptionCode = 0, array $errors = []) {
+        $this->code       = $exceptionCode;
+        $this->message    = ExceptionConstants::MESSAGES[$exceptionCode];
+        $this->statusCode = ExceptionConstants::HTTP_CODES[$exceptionCode];
         $this->errors     = $errors;
     }
 
-    public function getStatusCode() {
+    public function getStatusCode(): int {
         return $this->statusCode;
     }
 
-    public function getErrors() {
+    public function getErrors(): array {
         return $this->errors;
     }
 }

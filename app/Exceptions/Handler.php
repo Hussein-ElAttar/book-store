@@ -5,15 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use App\Services\ResponseService;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Illuminate\Validation\ValidationException;
 use App\Exceptions\Interfaces\ICustomException;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Spatie\Permission\Exceptions\UnauthorizedException as SpatieUnauthorizedException;
-
-use function PHPSTORM_META\type;
 
 class Handler extends ExceptionHandler
 {
@@ -60,8 +54,8 @@ class Handler extends ExceptionHandler
         if ($exception instanceof SpatieUnauthorizedException)
         {
             return ResponseService::getFailureResponse(
-                null,
-                null,
+                $exception->getCode(),
+                [],
                 $exception->getMessage(),
                 $exception->getStatusCode()
             );
@@ -71,8 +65,8 @@ class Handler extends ExceptionHandler
         if ($exception instanceof JWTException)
         {
             return ResponseService::getFailureResponse(
-                null,
-                null,
+                $exception->getCode(),
+                [],
                 $exception->getMessage()
             );
         }
@@ -86,6 +80,13 @@ class Handler extends ExceptionHandler
                 $exception->getStatusCode()
             );
         }
+
+        return ResponseService::getFailureResponse(
+            $exception->getCode(),
+            [],
+            $exception->getMessage(),
+            $exception->getStatusCode()
+        );
 
         return parent::render($request, $exception);
     }

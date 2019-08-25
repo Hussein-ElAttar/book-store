@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Constants\ExceptionConstants;
 use Closure;
 
 use App\Exceptions\CustomException;
@@ -12,7 +13,7 @@ class ValidateUserActivationURL
     {
         if (!$request->hasValidSignature())
         {
-            throw new CustomException('Invalid url', 400);
+            throw new CustomException(ExceptionConstants::URL_INVALID);
         }
 
         return $next($request);

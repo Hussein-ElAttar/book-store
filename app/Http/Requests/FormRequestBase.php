@@ -11,7 +11,7 @@ class FormRequestBase extends FormRequest
 {
     protected function failedValidation(Validator $validator)
     {
-        throw new CustomException(ExceptionConstants::VALIDATION_INVALID_DATA, $validator->errors());
+        throw new CustomException(ExceptionConstants::VALIDATION_INVALID_DATA, $validator->errors()->toArray());
     }
 
     /**

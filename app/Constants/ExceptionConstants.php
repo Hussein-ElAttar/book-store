@@ -4,6 +4,9 @@ namespace App\Constants;
 
 class ExceptionConstants
 {
+   // Default
+   const DEFAULT = 0;
+
    // Token Exceptions code 1xxx
    const TOKEN_EXPIRED          = 1001;
    const TOKEN_INVALID          = 1002;
@@ -23,9 +26,15 @@ class ExceptionConstants
    // Validation Exception code 4xxx
    const VALIDATION_INVALID_DATA = 4001;
 
-/*----------------------------------------------------------------------------------------- */
+   // URL Exception code 5xxx
+   const URL_INVALID = 5001;
+
+   /*----------------------------------------------------------------------------------------- */
 
    const MESSAGES = [
+      // Default
+      self::DEFAULT => 'Bad Request',
+
       // Token
       self::TOKEN_EXPIRED          => 'Token Expired',
       self::TOKEN_INVALID          => 'Token Invalid',
@@ -36,7 +45,7 @@ class ExceptionConstants
 
       // Resource
       self::RESOURCE_NOT_FOUND => 'Resource Not Found',
-      self::RESOURCE_FORBIDDEN => 'You cannot use this Resource',
+      self::RESOURCE_FORBIDDEN => 'Resource Forbidden',
 
       // User
       self::USER_ALREADY_VERIFIED    => 'User has already been activated',
@@ -44,11 +53,17 @@ class ExceptionConstants
 
       // Validation
       self::VALIDATION_INVALID_DATA =>'The given data is invalid',
+
+      // URL
+      self::URL_INVALID => 'Invalid Url',
    ];
 
 /*----------------------------------------------------------------------------------------- */
 
    const HTTP_CODES = [
+      // Default
+      self::DEFAULT => 400,
+
       // Token
       self::TOKEN_EXPIRED          => 401,
       self::TOKEN_INVALID          => 401,
@@ -67,6 +82,9 @@ class ExceptionConstants
 
       // Validation
       self::VALIDATION_INVALID_DATA => 422,
+
+      // URL
+      self::URL_INVALID => 400,
    ];
 
 }

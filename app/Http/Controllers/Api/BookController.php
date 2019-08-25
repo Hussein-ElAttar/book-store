@@ -36,7 +36,7 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         $book = $this->bookService->getBookForUser($id, Auth::user()->id);
 
@@ -91,10 +91,10 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $this->bookService->destroyBook($id, Auth::user()->id);
 
-        return ResponseService::getSuccessResponse(NULL, Constants::BOOK_DELETED);
+        return ResponseService::getSuccessResponse([], Constants::BOOK_DELETED);
     }
 }

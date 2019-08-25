@@ -11,7 +11,7 @@ trait MapsTymonJwtExceptions {
 
     public function mapTymonJwtExceptions($exception, $token_type = null){
         if($exception->getMessage()==='Token not provided'){
-            throw new CustomException('Token not provided', 401);
+            throw new CustomException(ExceptionConstants::TOKEN_NOT_PROVIDED);
         };
 
         $exception=$exception->getPrevious();

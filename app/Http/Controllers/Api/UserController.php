@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         $this->userService->sendActivationLinkEmail(Auth::user());
 
-        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_ACTIVITON_LINK_EMAIL_SENT);
+        return ResponseService::getSuccessResponse([], ResponseMessageConstants::USER_ACTIVITON_LINK_EMAIL_SENT);
     }
 
     public function SendResetPasswordEmail(SendResetPasswordEmailRequest $request)
@@ -47,7 +47,7 @@ class UserController extends Controller
 
         $this->userService->SendResetPasswordEmail($email);
 
-        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_RESET_PASSWORD_EMAIL_SENT);
+        return ResponseService::getSuccessResponse([], ResponseMessageConstants::USER_RESET_PASSWORD_EMAIL_SENT);
     }
 
     public function resetPassword(ResetUserPasswordRequest $request)
@@ -59,7 +59,7 @@ class UserController extends Controller
             $request->token
         );
 
-        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_PASSWORD_RESET);
+        return ResponseService::getSuccessResponse([], ResponseMessageConstants::USER_PASSWORD_RESET);
     }
 
     public function activateUser(Request $request)
@@ -68,7 +68,7 @@ class UserController extends Controller
 
         $this->userService->activateUser($user_id);
 
-        return ResponseService::getSuccessResponse(null, ResponseMessageConstants::USER_EMAIL_ACTIVATED);
+        return ResponseService::getSuccessResponse([], ResponseMessageConstants::USER_EMAIL_ACTIVATED);
 
     }
 }
