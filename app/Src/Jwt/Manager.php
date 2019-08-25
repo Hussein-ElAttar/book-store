@@ -13,10 +13,9 @@ class Manager extends TymonManager
     public function refresh(Token $token, $forceForever = false, $resetClaims = false)
     {
         $decoded = $this->decode($token);
-        if(JWTAuth::parseToken()->getClaim('type') !== 'refresh_token'){
+        if($decoded['type'] !== 'refresh_token'){
             throw new CustomException(ExceptionConstants::TOKEN_INVALID);
         }
-        $this->setRefreshFlow();
         $claims = $this->buildRefreshClaims($decoded);
         $claims['type'] = 'access_token';
 
