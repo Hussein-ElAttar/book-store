@@ -84,8 +84,7 @@ class Handler extends ExceptionHandler
         return ResponseService::getFailureResponse(
             $exception->getCode(),
             [],
-            $exception->getMessage(),
-            $exception->getStatusCode()
+            $exception->getMessage()
         );
 
         return parent::render($request, $exception);

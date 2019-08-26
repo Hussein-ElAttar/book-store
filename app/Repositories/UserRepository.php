@@ -14,6 +14,7 @@ class UserRepository implements IUserRepository
     }
 
     public static function updateUserPasswordByModel($user, $password){
+        $user->password = $password;
         $user->setRememberToken(Str::random(60));
         $user->save();
     }

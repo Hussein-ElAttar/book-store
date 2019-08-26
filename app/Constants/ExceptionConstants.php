@@ -49,7 +49,7 @@ class ExceptionConstants
 
       // User
       self::USER_ALREADY_VERIFIED    => 'User has already been activated',
-      self::USER_WRONG_EMAIL_OR_PASS => 'Wrong email or passwor',
+      self::USER_WRONG_EMAIL_OR_PASS => 'Wrong email or password',
 
       // Validation
       self::VALIDATION_INVALID_DATA =>'The given data is invalid',

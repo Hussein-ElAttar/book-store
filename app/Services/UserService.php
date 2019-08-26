@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Services;
+use Exception;
 use App\Events\UserVerified;
 use App\Services\EmailService;
 use Illuminate\Support\Carbon;
-use App\Exceptions\CustomException;
 use App\Constants\GenericConstants;
+use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\URL;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
@@ -70,7 +71,7 @@ class UserService
         });
 
         if($response != Password::PASSWORD_RESET) {
-            throw new CustomException($response);
+            throw new Exception(trans($response));
         }
     }
 
@@ -80,7 +81,7 @@ class UserService
         $response = Password::broker()->sendResetLink($data);
 
         if($response != Password::RESET_LINK_SENT) {
-            throw new CustomException($response);
+            throw new Exception(trans($response));
         }
     }
 }

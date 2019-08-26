@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Constants;
 use App\Services\BookService;
 use App\Services\ResponseService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Constants\ResponseMessageConstants;
 use App\Http\Requests\Book\StoreBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
 
@@ -94,7 +94,6 @@ class BookController extends Controller
     public function destroy(int $id)
     {
         $this->bookService->destroyBook($id, Auth::user()->id);
-
-        return ResponseService::getSuccessResponse([], Constants::BOOK_DELETED);
+        return ResponseService::getSuccessResponse([], ResponseMessageConstants::BOOK_DELETED);
     }
 }
